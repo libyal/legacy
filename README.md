@@ -1,2 +1,2 @@
-# legacy
-Legacy releases
+Legacy releases of libyal distribution packages.
+
