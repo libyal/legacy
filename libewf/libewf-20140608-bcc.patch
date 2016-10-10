@@ -1,0 +1,160 @@
+diff --git a/libcdatetime/libcdatetime_elements.c b/libcdatetime/libcdatetime_elements.c
+index 4f1f8ab..de4ef5b 100644
+--- a/libcdatetime/libcdatetime_elements.c
++++ b/libcdatetime/libcdatetime_elements.c
+@@ -2206,8 +2206,8 @@ int libcdatetime_elements_set_from_delta_in_seconds(
+ /* TODO mark duration as negative ? */
+ 		number_of_seconds *= -1;
+ 	}
+-	internal_elements->filetime.dwHighDateTime = (DWORD) ( ( number_of_seconds >> 32 ) & 0x00000000ffffffffULL );
+-	internal_elements->filetime.dwLowDateTime  = (DWORD) ( number_of_seconds & 0x00000000ffffffffULL );
++	internal_elements->filetime.dwHighDateTime = (DWORD) ( ( number_of_seconds >> 32 ) & 0xffffffffUL );
++	internal_elements->filetime.dwLowDateTime  = (DWORD) ( number_of_seconds & 0xffffffffUL );
+ 
+ 	if( libcdatetime_internal_elements_set_from_filetime_utc(
+              internal_elements,
+diff --git a/libfvalue/libfvalue_floating_point.c b/libfvalue/libfvalue_floating_point.c
+index a5ee72f..71ed6bc 100644
+--- a/libfvalue/libfvalue_floating_point.c
++++ b/libfvalue/libfvalue_floating_point.c
+@@ -1,7 +1,7 @@
+ /*
+  * Floating point value (IEEE 754) functions
+  *
+- * Copyright (c) 2010-2013, Joachim Metz <joachim.metz@gmail.com>
++ * Copyright (c) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+  *
+  * Refer to AUTHORS for acknowledgements.
+  *
+@@ -27,6 +27,7 @@
+ #include "libfvalue_definitions.h"
+ #include "libfvalue_floating_point.h"
+ #include "libfvalue_libcerror.h"
++#include "libfvalue_libcstring.h"
+ 
+ /* Creates a floating point
+  * Make sure the value floating_point is referencing, is set to NULL
+@@ -993,17 +994,17 @@ int libfvalue_string_size_from_floating_point(
+ 				break;
+ 
+ 			case 64:
+-				if( floating_point_value == 0x7ff0000000000000ULL )
++				if( floating_point_value == 0x7ff0000000000000UL )
+ 				{
+ 					is_infinite = 1;
+ 				}
+ 				else if( ( is_signed != 0 )
+-				      && ( floating_point_value == 0x7ff8000000000000ULL ) )
++				      && ( floating_point_value == 0x7ff8000000000000UL ) )
+ 				{
+ 					is_indeterminate = 1;
+ 				}
+-				else if( ( floating_point_value >= 0x7ff0000000000001ULL )
+-				      && ( floating_point_value <= 0x7fffffffffffffffULL ) )
++				else if( ( floating_point_value >= 0x7ff0000000000001UL )
++				      && ( floating_point_value <= 0x7fffffffffffffffUL ) )
+ 				{
+ 					is_not_a_number = 1;
+ 				}
+@@ -1041,7 +1042,7 @@ int libfvalue_string_size_from_floating_point(
+ 					{
+ 						exponent -= 1023;
+ 					}
+-					floating_point_value &= 0x000fffffffffffffULL;
++					floating_point_value &= 0x000fffffffffffffUL;
+ 					bit_shift             = 52;
+ 				}
+ 				else
+@@ -1395,17 +1396,17 @@ int libfvalue_utf8_string_with_index_copy_from_floating_point(
+ 				break;
+ 
+ 			case 64:
+-				if( floating_point_value == 0x7ff0000000000000ULL )
++				if( floating_point_value == 0x7ff0000000000000UL )
+ 				{
+ 					is_infinite = 1;
+ 				}
+ 				else if( ( is_signed != 0 )
+-				      && ( floating_point_value == 0x7ff8000000000000ULL ) )
++				      && ( floating_point_value == 0x7ff8000000000000UL ) )
+ 				{
+ 					is_indeterminate = 1;
+ 				}
+-				else if( ( floating_point_value >= 0x7ff0000000000001ULL )
+-				      && ( floating_point_value <= 0x7fffffffffffffffULL ) )
++				else if( ( floating_point_value >= 0x7ff0000000000001UL )
++				      && ( floating_point_value <= 0x7fffffffffffffffUL ) )
+ 				{
+ 					is_not_a_number = 1;
+ 				}
+@@ -1443,7 +1444,7 @@ int libfvalue_utf8_string_with_index_copy_from_floating_point(
+ 					{
+ 						exponent -= 1023;
+ 					}
+-					floating_point_value &= 0x000fffffffffffffULL;
++					floating_point_value &= 0x000fffffffffffffUL;
+ 					bit_shift             = 52;
+ 				}
+ 				else
+@@ -2240,17 +2241,17 @@ int libfvalue_utf16_string_with_index_copy_from_floating_point(
+ 				break;
+ 
+ 			case 64:
+-				if( floating_point_value == 0x7ff0000000000000ULL )
++				if( floating_point_value == 0x7ff0000000000000UL )
+ 				{
+ 					is_infinite = 1;
+ 				}
+ 				else if( ( is_signed != 0 )
+-				      && ( floating_point_value == 0x7ff8000000000000ULL ) )
++				      && ( floating_point_value == 0x7ff8000000000000UL ) )
+ 				{
+ 					is_indeterminate = 1;
+ 				}
+-				else if( ( floating_point_value >= 0x7ff0000000000001ULL )
+-				      && ( floating_point_value <= 0x7fffffffffffffffULL ) )
++				else if( ( floating_point_value >= 0x7ff0000000000001UL )
++				      && ( floating_point_value <= 0x7fffffffffffffffUL ) )
+ 				{
+ 					is_not_a_number = 1;
+ 				}
+@@ -2288,7 +2289,7 @@ int libfvalue_utf16_string_with_index_copy_from_floating_point(
+ 					{
+ 						exponent -= 1023;
+ 					}
+-					floating_point_value &= 0x000fffffffffffffULL;
++					floating_point_value &= 0x000fffffffffffffUL;
+ 					bit_shift             = 52;
+ 				}
+ 				else
+@@ -3085,17 +3086,17 @@ int libfvalue_utf32_string_with_index_copy_from_floating_point(
+ 				break;
+ 
+ 			case 64:
+-				if( floating_point_value == 0x7ff0000000000000ULL )
++				if( floating_point_value == 0x7ff0000000000000UL )
+ 				{
+ 					is_infinite = 1;
+ 				}
+ 				else if( ( is_signed != 0 )
+-				      && ( floating_point_value == 0x7ff8000000000000ULL ) )
++				      && ( floating_point_value == 0x7ff8000000000000UL ) )
+ 				{
+ 					is_indeterminate = 1;
+ 				}
+-				else if( ( floating_point_value >= 0x7ff0000000000001ULL )
+-				      && ( floating_point_value <= 0x7fffffffffffffffULL ) )
++				else if( ( floating_point_value >= 0x7ff0000000000001UL )
++				      && ( floating_point_value <= 0x7fffffffffffffffUL ) )
+ 				{
+ 					is_not_a_number = 1;
+ 				}
+@@ -3133,7 +3134,7 @@ int libfvalue_utf32_string_with_index_copy_from_floating_point(
+ 					{
+ 						exponent -= 1023;
+ 					}
+-					floating_point_value &= 0x000fffffffffffffULL;
++					floating_point_value &= 0x000fffffffffffffUL;
+ 					bit_shift             = 52;
+ 				}
+ 				else

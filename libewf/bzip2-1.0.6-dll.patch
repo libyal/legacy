@@ -1,0 +1,47 @@
+--- bzip2-1.0.6/bzlib.h	2010-09-11 01:08:42.000000000 +0200
++++ bzip2/bzlib.h	2012-08-15 21:11:57.338017066 +0200
+@@ -66,7 +66,7 @@
+    bz_stream;
+ 
+ 
+-#ifndef BZ_IMPORT
++#if !defined( BZ_IMPORT ) && !defined( BZ_EXPORT )
+ #define BZ_EXPORT
+ #endif
+ 
+@@ -75,7 +75,19 @@
+ #include <stdio.h>
+ #endif
+ 
+-#ifdef _WIN32
++#if defined( WINDOWS ) || defined( WIN32 )
++
++#if defined( BZ_DLL )
++#    if defined(WIN32) && ( !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x500 ) )
++#      ifdef BZ_EXPORT
++#        define BZ_EXTERN extern __declspec(dllexport)
++#      else
++#        define BZ_EXTERN extern __declspec(dllimport)
++#      endif
++#    define BZ_API(func) func
++#    endif
++
++#else
+ #   include <windows.h>
+ #   ifdef small
+       /* windows.h define small to char */
+@@ -89,10 +101,13 @@
+ #   define BZ_API(func) (WINAPI * func)
+ #   define BZ_EXTERN
+ #   endif
++
++#endif /* defined( BZ_DLL ) */
++
+ #else
+ #   define BZ_API(func) func
+ #   define BZ_EXTERN extern
+-#endif
++#endif /* defined( WINDOWS ) || defined( WIN32 ) */
+ 
+ 
+ /*-- Core (low-level) library functions --*/
